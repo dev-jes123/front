@@ -28,7 +28,6 @@ const Icon = ({ name, src, size = "medium", color, rotate, onClick, alt, ...prop
 
   const path = getPath();
   if (!path) return null;
-
   return (
     <IconImage
       src={path}
