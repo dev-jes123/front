@@ -10,6 +10,8 @@ export const iconMap = {
   search: "search.png",
   house: "house.png",
   "plus-gray": "plus-gray.png",
+  kakao: "kakao.png",
+  naver: "naver.png",
 };
 
 const sizeMap = {

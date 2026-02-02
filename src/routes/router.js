@@ -92,7 +92,7 @@ const router = createBrowserRouter([
       // SNS회원가입 후 닉네임 입력
       {
         path: "/join-sns",
-        element: <MemberJoinSns/>
+        element: <MemberJoinSns />
       }
     ]
   },
@@ -100,7 +100,7 @@ const router = createBrowserRouter([
   {
     path: "/mypage",
     element: <GeneralMyPageLayout />,
-    children:[
+    children: [
       // 프로필
       {
         index: true,
@@ -118,7 +118,7 @@ const router = createBrowserRouter([
       // 내 활동
       {
         path: "my-activity",
-        element: <MyActivity/>,
+        element: <MyActivity />,
         children: [
           // 내 글
           {
@@ -150,12 +150,12 @@ const router = createBrowserRouter([
       // 알림
       {
         path: "notify",
-        element: <MyNotificationPage/>
+        element: <MyNotificationPage />
       },
       // 설정
       {
         path: "setting",
-        element: <MySettingPage/>
+        element: <MySettingPage />
       },
     ]
   },
@@ -163,7 +163,7 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: <AdminMyPageLayout />,
-    children:[
+    children: [
       // 대시보드
       {
         path: "",
