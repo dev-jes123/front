@@ -1,31 +1,93 @@
 import React from "react";
-import BaseButton from "../../../../components/button/BaseButton";
-import S from "./style";
 
+// 관리자 마이페이지 헤더
 const AdminHeader = () => {
-	const handleLogout = () => {
-		// TODO: 로그아웃 로직 구현
-		console.log("로그아웃 클릭");
-	};
+  return (
+    <header style={headerStyles.bar}>
+      {/* 로고 영역 */}
+      <div style={headerStyles.logoArea}>
+        <button type="button" style={headerStyles.btn}>
+          <img
+            src="/assets/images/logo.png"
+            alt="로고"
+            style={headerStyles.img}
+          />
+        </button>
+      </div>
 
-	return (
-		<S.Header>
-			<S.HeaderUsername>안녕하세요, OOO 관리자님</S.HeaderUsername>
-			<div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-				<S.HeaderLink to="/">앱으로 이동</S.HeaderLink>
-				<BaseButton
-					size="bttxt"
-					variant="solid"
-					shape="rounded"
-					color="white"
-					padding="medium"
-					onClick={handleLogout}
-				>
-					로그아웃
-				</BaseButton>
-			</div>
-		</S.Header>
-	);
+      {/* 프로필 영역 */}
+      <div style={headerStyles.profileArea}>
+        <div style={headerStyles.profileCircle}>
+          <img
+            src="/assets/images/icons/user-profile.png"
+            alt="P"
+            style={headerStyles.pIcon}
+          />
+        </div>
+        <span style={headerStyles.nickname}>관리자</span>
+      </div>
+    </header>
+  );
+};
+
+const headerStyles = {
+  bar: {
+    width: "100%",
+    height: "99px",
+    backgroundColor: "#FFFFFF",
+    display: "flex",
+    alignItems: "center",
+    padding: 0,
+    margin: 0,
+  },
+  logoArea: {
+    width: "200px",
+    minWidth: "200px",
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    paddingLeft: "40px",
+    boxSizing: "border-box",
+    borderRight: "1px solid #E6E8EC",
+  },
+  profileArea: {
+    flex: 1,
+    height: "100%",
+    display: "flex",
+    justifyContent: "flex-end",
+    paddingRight: "198px",
+    alignItems: "center",
+    gap: "12px",
+    borderBottom: "1px solid #E6E8EC",
+    boxSizing: "border-box",
+  },
+  btn: {
+    border: "none",
+    background: "none",
+    padding: 0,
+    cursor: "pointer",
+  },
+  img: { height: "23px", width: "auto" },
+  profileCircle: {
+    width: "48px",
+    height: "48px",
+    borderRadius: "50%",
+    backgroundColor: "#D9D9D9",
+    overflow: "hidden",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  pIcon: {
+    width: "80%",
+    height: "80%",
+    objectFit: "contain",
+  },
+  nickname: {
+    fontSize: "16px",
+    fontWeight: 500,
+    color: "#0B1215",
+  },
 };
 
 export default AdminHeader;

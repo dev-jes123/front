@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import BaseButton from "../../../../components/button/BaseButton";
+import S from "../../../../components/modals/style";
 
 const ACTION_OPTIONS = [
 	{ value: "pending", label: "미처리" },
@@ -39,88 +39,77 @@ const ReportActionModal = ({ isOpen, report, onClose, onConfirm }) => {
 	};
 
 	return (
-		<div onClick={handleClose}>
-			<div onClick={(e) => e.stopPropagation()}>
-				<h2>신고 처리</h2>
+		<S.ModalOverlay onClick={handleClose}>
+			<S.ModalContainer onClick={(e) => e.stopPropagation()}>
+				<S.CloseButton type="button" onClick={handleClose}>
+					×
+				</S.CloseButton>
+				<S.Title>신고 처리</S.Title>
+				<S.Subtitle>신고 내용을 확인하고 적절한 조치를 선택해주세요.</S.Subtitle>
 
-				<div>
-					<div>
-						<span>신고 대상:</span>
-						<span>
-							{report.reportedUser?.nickname}({report.reportedUser?.email})
-						</span>
-					</div>
+				<S.InfoCard>
+					<S.InfoRow>
+						<S.InfoLabel>신고 대상</S.InfoLabel>
+						<S.InfoValue>
+							{report.reportedUser?.nickname} ({report.reportedUser?.email})
+						</S.InfoValue>
+					</S.InfoRow>
+					<S.InfoRow>
+						<S.InfoLabel>신고 사유</S.InfoLabel>
+						<S.InfoValue>{report.reason}</S.InfoValue>
+					</S.InfoRow>
+				</S.InfoCard>
 
-					<div>
-						<span>신고 내용:</span>
-						<span>{report.reason}</span>
-					</div>
+				<S.Section>
+					<S.Label>처리 방법</S.Label>
+					<S.Select value={action} onChange={(e) => setAction(e.target.value)}>
+						{ACTION_OPTIONS.map((option) => (
+							<option key={option.value} value={option.value}>
+								{option.label}
+							</option>
+						))}
+					</S.Select>
+				</S.Section>
 
-					<div>
-						<label>처리:</label>
-						<select value={action} onChange={(e) => setAction(e.target.value)}>
-							{ACTION_OPTIONS.map((option) => (
-								<option key={option.value} value={option.value}>
-									{option.label}
-								</option>
-							))}
-						</select>
-					</div>
-
-					<div>
-						<label>
-							<input
-								type="checkbox"
-								checked={notifyReporter}
-								onChange={(e) => setNotifyReporter(e.target.checked)}
-							/>
-							<span>신고자에게 신고 처리 결과를 전송</span>
-						</label>
-						<label>
-							<input
-								type="checkbox"
-								checked={applyToAll}
-								onChange={(e) => setApplyToAll(e.target.checked)}
-							/>
-							<span>
-								해당 옵션을 동일 신고 대상에 대한 신고 내역에 모두 적용
-							</span>
-						</label>
-					</div>
-
-					<div>
-						<label>차단 사유</label>
-						<textarea
-							value={reason}
-							onChange={(e) => setReason(e.target.value)}
-							placeholder="입력된 내용은 사용자 이메일로 전송됩니다."
-							rows={4}
+				<S.Section>
+					<S.CheckboxRow>
+						<S.Checkbox
+							type="checkbox"
+							checked={notifyReporter}
+							onChange={(e) => setNotifyReporter(e.target.checked)}
 						/>
-					</div>
-				</div>
+						신고자에게 처리 결과 알림 전송
+					</S.CheckboxRow>
+					<S.CheckboxRow>
+						<S.Checkbox
+							type="checkbox"
+							checked={applyToAll}
+							onChange={(e) => setApplyToAll(e.target.checked)}
+						/>
+						동일 대상의 모든 신고에 일괄 적용
+					</S.CheckboxRow>
+				</S.Section>
 
-				<div>
-					<BaseButton
-						shape="rounded"
-						border="gray03"
-						color="gray03"
-						padding="medium"
-						onClick={handleClose}
-					>
+				<S.Section>
+					<S.Label>차단 사유</S.Label>
+					<S.Textarea
+						value={reason}
+						onChange={(e) => setReason(e.target.value)}
+						placeholder="입력된 내용은 사용자 이메일로 전송됩니다."
+						rows={4}
+					/>
+				</S.Section>
+
+				<S.ButtonRow>
+					<S.SecondaryButton type="button" onClick={handleClose}>
 						취소
-					</BaseButton>
-					<BaseButton
-						shape="rounded"
-						backgroundColor="primary"
-						color="white"
-						padding="medium"
-						onClick={handleConfirm}
-					>
+					</S.SecondaryButton>
+					<S.ConfirmButton type="button" onClick={handleConfirm}>
 						확인
-					</BaseButton>
-				</div>
-			</div>
-		</div>
+					</S.ConfirmButton>
+				</S.ButtonRow>
+			</S.ModalContainer>
+		</S.ModalOverlay>
 	);
 };
 
