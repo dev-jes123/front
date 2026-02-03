@@ -1,11 +1,22 @@
-import React from 'react';
-import Card from './Card';
+import React from "react";
+import Card from "./Card";
 
-const CardGrid = () => {
+const CardGrid = ({ posts = [] }) => {
   return (
-    <div>
-      카드 그리드 컴포넌트
-      <Card />
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(4, 1fr)",
+        gap: "30px",
+        marginTop: "50px",
+        width: "100%",
+        padding: "0 24px",
+        boxSizing: "border-box"
+      }}
+    >
+      {posts.map((post) => (
+        <Card key={post.id} post={post} />
+      ))}
     </div>
   );
 };

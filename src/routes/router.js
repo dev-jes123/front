@@ -56,7 +56,7 @@ const router = createBrowserRouter([
       },
       // 정보제공 글 상세
       {
-        path: "/provide/detail",
+        path: "/provide/detail/:id",
         element: <ProvideDetail />
       },
       // 커뮤니티

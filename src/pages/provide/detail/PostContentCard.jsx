@@ -1,11 +1,14 @@
-import React from 'react';
+import React from "react";
+import S from "./style";
 
-const PostContentCard = () => {
+const PostContentCard = ({ contentHtml }) => {
   return (
-    <div>
-      게시글 내용 카드
-    </div>
+    <S.PostContainer>
+      <S.TopLine />
+      <S.PostContent dangerouslySetInnerHTML={{ __html: contentHtml }} />
+      <S.BottomLine />
+    </S.PostContainer>
   );
 };
 
-export default PostContentCard; 
+export default PostContentCard;
