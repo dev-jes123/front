@@ -3,9 +3,14 @@ const theme = {};
 
 theme.PALLETE = {
 	primary: "#2563EB",
+	primaryLight: "#E5ECFF",
+	primaryAlpha80: "rgba(37,99,235,0.8)",
 	secondary: "#F5F7F9",
 	white: "#fff",
 	black: "#0B1215",
+	border: {
+		light: "#DBE1E8",
+	},
 	gray: {
 		greyscale01: "#f1f1f1",
 		greyscale02: "#D9D9D9",
@@ -43,7 +48,7 @@ theme.FONT_WEIGHT = {
 	semiBold: "600",
 	bold: "700",
 	extraBold: "800",
-	black: "800",
+	black: "900",
 };
 
 theme.FONT_LINE = {

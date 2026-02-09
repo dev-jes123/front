@@ -6,6 +6,7 @@ export const iconMap = {
   hits: "hits.png",
   "bookmark-view": "bookmark-view.png",
   "bookmark-active": "bookmark-active.png",
+  "bookmarks": "bookmarks.png",
   "arrow-right": "arrow-right.png",
   search: "search.png",
   like: "like.png",

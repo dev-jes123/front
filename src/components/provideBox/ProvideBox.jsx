@@ -2,10 +2,30 @@ import React from "react";
 import S from "./style";
 import BaseButton from "../button/BaseButton";
 
-const ProvideBox = () => {
+const DEFAULT_IMAGE = `${process.env.PUBLIC_URL}/assets/images/provide-default.png`;
+
+const formatDate = (value) => {
+  if (!value) return "";
+  const d = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(d.getTime())) return String(value);
+  const yy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yy}. ${mm}. ${dd}`;
+};
+
+const ProvideBox = ({ post }) => {
+  const {
+    id,
+    category = "",
+    title = "",
+    createdAt = "",
+    imageSrc = "",
+  } = post || {};
+
   return (
     <S.ProvideBox>
-      <S.ProvideBoxLink to="/provide/detail">
+      <S.ProvideBoxLink to={`/provide/detail/${id}`}>
         <S.ProvideBoxButtonWrapper>
           <BaseButton
             border="primary"
@@ -17,24 +37,25 @@ const ProvideBox = () => {
             backgroundColor="primary"
             font="bttxt"
           >
-            생활정보
+            {category}
           </BaseButton>
         </S.ProvideBoxButtonWrapper>
         <S.ProvideBoxImageWrapper>
           <S.ProvideBoxImage
-            src={`${process.env.PUBLIC_URL}/assets/images/provide-default.png`}
-            alt="provide box"
+            src={imageSrc || DEFAULT_IMAGE}
+            alt={`${category} 썸네일`}
+            onError={(e) => {
+              e.currentTarget.src = DEFAULT_IMAGE;
+            }}
           />
         </S.ProvideBoxImageWrapper>
         <S.ProvideBoxContent>
           <S.ProvideBoxTitle>
-            <S.ProvideBoxTitleSubtext>생활정보</S.ProvideBoxTitleSubtext>
-            <S.ProvideBoxTitleText>
-              2025 청년 자취정보 소식
-            </S.ProvideBoxTitleText>
+            <S.ProvideBoxTitleSubtext>{category}</S.ProvideBoxTitleSubtext>
+            <S.ProvideBoxTitleText>{title}</S.ProvideBoxTitleText>
           </S.ProvideBoxTitle>
           <S.ProvideBoxContentBottom>
-            <S.ProvideBoxDate>2025. 10. 22</S.ProvideBoxDate>
+            <S.ProvideBoxDate>{formatDate(createdAt)}</S.ProvideBoxDate>
             <S.ProvideBoxMore>
               <svg
                 width="5"

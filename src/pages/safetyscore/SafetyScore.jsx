@@ -2,6 +2,8 @@ import React from "react";
 import S from "./style";
 import IconButton from "../../components/button/IconButton";
 import SafetyScoreMap from "./SafetyScoreMap";
+import SafetyScoreInfo from "./SafetyScoreInfo";
+import SafetyScoreList from "./SafetyScoreList";
 
 const SafetyScore = () => {
   return (
@@ -24,6 +26,8 @@ const SafetyScore = () => {
           </IconButton>
         </S.SafetyScoreTitle>
         <SafetyScoreMap />
+        <SafetyScoreInfo />
+        <SafetyScoreList />
       </S.SafetyScoreInner>
     </S.SafetyScoreContainer>
   );

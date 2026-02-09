@@ -4,6 +4,7 @@ import Title from "../../../components/title/Title";
 import IconButton from "../../../components/button/IconButton";
 import ProvideBox from "../../../components/provideBox/ProvideBox";
 import { Link } from "react-router-dom";
+import { mockPosts } from "../../../mock/mockPosts";
 
 const MainProvide = () => {
   return (
@@ -35,10 +36,9 @@ const MainProvide = () => {
           </Link>
         </S.TitleContainer>
         <S.ProvideGrid>
-          <ProvideBox />
-          <ProvideBox />
-          <ProvideBox />
-          <ProvideBox />
+          {mockPosts.slice(0, 4).map((post) => (
+            <ProvideBox key={post.id} post={post} />
+          ))}
         </S.ProvideGrid>
       </S.ProvideInner>
     </S.ProvideContainer>

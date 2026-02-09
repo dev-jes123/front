@@ -41,7 +41,7 @@ S.ProvideBoxImage = styled.img`
 
 S.ProvideBoxContent = styled.div`
   padding: 30px 25px;
-  background: ${({theme}) => theme.PALLETE.secondary};
+  background: ${({ theme }) => theme.PALLETE.secondary};
 `;
 
 S.ProvideBoxTitle = styled.div`
@@ -49,19 +49,25 @@ S.ProvideBoxTitle = styled.div`
   flex-direction: column;
   gap: 7px;
   margin-bottom: 30px;
+  min-width: 0;
 `;
 
 S.ProvideBoxTitleSubtext = styled.div`
-  font-size: ${({theme}) => theme.FONT_SIZE["bttxt"]};
-  font-weight: ${({theme}) => theme.FONT_WEIGHT["semiBold"]};
-  line-height: ${({theme}) => theme.FONT_LINE["brtxt"]};
-  color: ${({theme}) => theme.PALLETE.primary};
+  font-size: ${({ theme }) => theme.FONT_SIZE["bttxt"]};
+  font-weight: ${({ theme }) => theme.FONT_WEIGHT["semiBold"]};
+  line-height: ${({ theme }) => theme.FONT_LINE["brtxt"]};
+  color: ${({ theme }) => theme.PALLETE.primary};
   `;
 
 S.ProvideBoxTitleText = styled.div`
-  font-size: ${({theme}) => theme.FONT_SIZE["h4"]};
-  font-weight: ${({theme}) => theme.FONT_WEIGHT["semiBold"]};
-  line-height: ${({theme}) => theme.FONT_LINE["brtxt"]};
+  font-size: ${({ theme }) => theme.FONT_SIZE["h4"]};
+  font-weight: ${({ theme }) => theme.FONT_WEIGHT["semiBold"]};
+  line-height: ${({ theme }) => theme.FONT_LINE["brtxt"]};
+  white-space: nowrap;
+  overflow: hidden;
+  height: 28px;
+  min-width: 0;
+  text-overflow: ellipsis;
 `;
 
 S.ProvideBoxContentBottom = styled.div`
@@ -71,14 +77,14 @@ S.ProvideBoxContentBottom = styled.div`
 `;
 
 S.ProvideBoxDate = styled.div`
-  font-size: ${({theme}) => theme.FONT_SIZE["bttxt"]};
-  font-weight: ${({theme}) => theme.FONT_WEIGHT["regular"]};
-  line-height: ${({theme}) => theme.FONT_LINE["brtxt"]};
-  color: ${({theme}) => theme.PALLETE.gray["greyscale04"]};
+  font-size: ${({ theme }) => theme.FONT_SIZE["bttxt"]};
+  font-weight: ${({ theme }) => theme.FONT_WEIGHT["regular"]};
+  line-height: ${({ theme }) => theme.FONT_LINE["brtxt"]};
+  color: ${({ theme }) => theme.PALLETE.gray["greyscale04"]};
 `;
 
 S.ProvideBoxMore = styled.div`
-  background-color: ${({theme}) => theme.PALLETE.white};
+  background-color: ${({ theme }) => theme.PALLETE.white};
   width: 30px;
   height: 30px;
   border-radius: 50%;

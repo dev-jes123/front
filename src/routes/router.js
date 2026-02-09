@@ -127,22 +127,22 @@ const router = createBrowserRouter([
           },
           // 내 댓글
           {
-            path: "",
+            path: "comments",
             element: <MyComments />
           },
           // 내 글의 댓글
           {
-            path: "",
+            path: "comments-on-my-posts",
             element: <CommentsOnMyPosts />
           },
           // 스크랩한 글
           {
-            path: "",
+            path: "bookmarked-posts",
             element: <BookmarkedPosts />
           },
           // 좋아요한 글
           {
-            path: "",
+            path: "liked-posts",
             element: <LikedPosts />
           },
         ]
