@@ -3,6 +3,8 @@ import S from "./style";
 import CommentItem from "./CommentItem";
 
 const CommentThread = ({ comments = [] }) => {
+  if(!comments.length) return null;
+  
   return (
     <S.CommentThreadContainer>
       {comments.map((comment) => (

@@ -19,9 +19,15 @@ const CommentItem = ({ comment }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [localLikeCount, setLocalLikeCount] = useState(likeCount);
 
+  const hasReply = (replyCount ?? 0) > 0 || (replies?.length ?? 0) > 0;
+
   useEffect(() => {
     setIsLiked(false);
   }, [id]);
+
+  useEffect(() => {
+    if(!hasReply) setIsOpen(false)
+  }, [hasReply])
 
   const handleToggleLike = () => {
     if (isLiked) {
@@ -69,15 +75,17 @@ const CommentItem = ({ comment }) => {
                   />
                   <S.CommentCountText>{replyCount}</S.CommentCountText>
                 </S.CommentCountItem>
-                <S.CommentIconButton type="button" onClick={handleToggleOpen}>
-                  <S.ReplyOpenIcon
-                    src="/assets/images/icons/down-arrow.png"
-                    alt="펼치기"
-                    style={{
-                      transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
-                    }}
-                  />
-                </S.CommentIconButton>
+                {hasReply && (
+                  <S.CommentIconButton type="button" onClick={handleToggleOpen}>
+                    <S.ReplyOpenIcon
+                      src="/assets/images/icons/down-arrow.png"
+                      alt="펼치기"
+                      style={{
+                        transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+                      }}
+                    />
+                  </S.CommentIconButton>
+                )}
               </S.CommentIconGroup>
             </S.CommentRight>
           </S.CommentTop>

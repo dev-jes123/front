@@ -2,18 +2,18 @@ import React, { useState } from "react";
 import S from "./style";
 import BaseButton from "../../../components/button/BaseButton";
 
-const CommentComposer = ({ postId }) => {
+const CommentComposer = ({ postId, onSubmit }) => {
   const [value, setValue] = useState("");
 
   const handleSubmit = () => {
-    if (!value.trim()) return;
+    const trimmed = value.trim()
+    if(!trimmed){
+      alert("내용을 입력하세요.");
+      return;
+    }
 
-    console.log("댓글 등록", {
-      postId,
-      content: value,
-    });
-
-    setValue("");
+    onSubmit?.({postId, content:trimmed})
+    setValue("")
   };
 
   return (

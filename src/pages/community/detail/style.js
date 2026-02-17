@@ -208,17 +208,19 @@ S.CommentThreadContainer = styled.div`
 
 // CommentItem
 S.CommentWrap = styled.div`
-  width: 100%;
   display: flex;
   gap: 12px;
   align-items: flex-start;
 `;
 
 S.CommentBubble = styled.div`
-  flex: 1;
+  width: fit-content;
+  max-width: calc(100% - 52px - 12px);
   background: #f6f7f9;
   border-radius: 14px;
   padding: 16px 24px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 `;
 
 S.CommentTop = styled.div`
@@ -226,6 +228,7 @@ S.CommentTop = styled.div`
   justify-content: space-between;
   align-items: flex-start;
   gap: 12px;
+  margin-bottom: 6px;
 `;
 
 S.WritedCommentAuthor = styled.div`
@@ -239,6 +242,7 @@ S.CommentRight = styled.div`
   flex-direction: column;
   align-items: flex-end;
   gap: 6px;
+  margin-left: 36px;
 `;
 
 S.CommentTime = styled.div`
