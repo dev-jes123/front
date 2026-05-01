@@ -4,16 +4,27 @@ import BaseButton from "../../../components/button/BaseButton";
 
 const ReplyComposer = ({ onSubmit }) => {
   const [value, setValue] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const trimmed = value.trim();
     if (!trimmed) {
       alert("내용을 입력하세요.");
       return;
     }
 
-    onSubmit?.(trimmed);
-    setValue("");
+    try {
+      setIsSubmitting(true);
+
+      await onSubmit?.(trimmed);
+
+      setValue("");
+    } catch (e) {
+      console.error(e);
+      alert("답글 작성 실패");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -32,6 +43,7 @@ const ReplyComposer = ({ onSubmit }) => {
           onChange={(e) => setValue(e.target.value)}
           rows={1}
         />
+
         <BaseButton
           type="button"
           size="bttxt"
@@ -41,6 +53,7 @@ const ReplyComposer = ({ onSubmit }) => {
           color="black"
           padding="medium"
           onClick={handleSubmit}
+          disabled={isSubmitting}
           style={{ width: "54px", height: "32px" }}
         >
           입력

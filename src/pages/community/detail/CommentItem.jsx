@@ -3,34 +3,31 @@ import ReplyComposer from "./ReplyComposer";
 import ReplyThread from "./ReplyThread";
 import S from "./style";
 import ReportModal from "./ReportModal";
+import { formatRelativeTime } from "../../../utils/formatDate";
+import { createReply, toggleLikeComment } from "../../../api/community";
 
 const CommentItem = ({ comment }) => {
   const {
     id,
     author,
-    authorProfile,
     content,
     createdAt,
     likeCount = 0,
-    replyCount = 0,
     replies = [],
   } = comment;
 
   const [isOpen, setIsOpen] = useState(false);
   const [isReplyWriting, setIsReplyWriting] = useState(false);
-
   const [isLiked, setIsLiked] = useState(false);
   const [localLikeCount, setLocalLikeCount] = useState(likeCount);
-
   const [localReplies, setLocalReplies] = useState(replies);
-  const [localReplyCount, setLocalReplyCount] = useState(replyCount);
-
   const [isReportOpen, setIsReportOpen] = useState(false);
+  const [newReplyId, setNewReplyId] = useState(null);
+
   const handleOpenReport = () => setIsReportOpen(true);
   const handleCloseReport = () => setIsReportOpen(false);
 
-  const hasReply =
-    (localReplyCount ?? 0) > 0 || (localReplies?.length ?? 0) > 0;
+  const hasReply = (localReplies?.length ?? 0) > 0;
 
   useEffect(() => {
     setIsLiked(false);
@@ -40,13 +37,37 @@ const CommentItem = ({ comment }) => {
     if (!hasReply) setIsOpen(false);
   }, [hasReply]);
 
-  const handleToggleLike = () => {
-    if (isLiked) {
-      setIsLiked(false);
-      setLocalLikeCount((c) => Math.max(0, c - 1));
-    } else {
-      setIsLiked(true);
-      setLocalLikeCount((c) => c + 1);
+  useEffect(() => {
+    if (!newReplyId) return;
+
+    requestAnimationFrame(() => {
+      const el = document.getElementById(`reply-${newReplyId}`);
+
+      if (el) {
+        el.scrollIntoView({
+          behavior: "smooth",
+          block: "end",
+        });
+
+        setNewReplyId(null);
+      }
+    });
+  }, [localReplies, newReplyId]);
+
+  const handleToggleLike = async () => {
+    try {
+      await toggleLikeComment(id);
+
+      if (isLiked) {
+        setIsLiked(false);
+        setLocalLikeCount((c) => Math.max(0, c - 1));
+      } else {
+        setIsLiked(true);
+        setLocalLikeCount((c) => c + 1);
+      }
+    } catch (e) {
+      console.error(e);
+      alert("좋아요 실패");
     }
   };
 
@@ -69,16 +90,19 @@ const CommentItem = ({ comment }) => {
     <div>
       <S.CommentWrap>
         <S.ProfileBox>
-          <S.ProfileImg src={authorProfile} alt={`${author} 프로필`} />
+          <S.ProfileImg
+            src={author.profileImage || "/assets/images/icons/user-profile.png"}
+            alt={`${author.nickname} 프로필`}
+          />
         </S.ProfileBox>
 
         <S.CommentBubble>
           <S.CommentTop>
-            <S.WritedCommentAuthor>{author}</S.WritedCommentAuthor>
+            <S.WritedCommentAuthor>{author.nickname}</S.WritedCommentAuthor>
 
             <S.CommentRight>
               <S.CommentTime>
-                <span>{createdAt}</span>
+                <span>{formatRelativeTime(createdAt)}</span>
                 <S.CommentSirenIcon
                   src="/assets/images/icons/siren.png"
                   alt="신고"
@@ -95,12 +119,13 @@ const CommentItem = ({ comment }) => {
                   />
                   <S.CommentCountText>{localLikeCount}</S.CommentCountText>
                 </S.CommentIconButton>
+
                 <S.CommentIconButton type="button" onClick={handleReplyClick}>
                   <S.CommentCountIcon
                     src="/assets/images/icons/comment.png"
                     alt="답글"
                   />
-                  <S.CommentCountText>{localReplyCount}</S.CommentCountText>
+                  <S.CommentCountText>{localReplies.length}</S.CommentCountText>
                 </S.CommentIconButton>
 
                 {hasReply && (
@@ -125,18 +150,16 @@ const CommentItem = ({ comment }) => {
         <S.ReplySection>
           {isReplyWriting && (
             <ReplyComposer
-              onSubmit={(content) => {
-                const newReply = {
-                  id: Date.now(),
-                  author: "내 닉네임",
-                  authorProfile: "/assets/images/icons/user-profile.png",
-                  content,
-                  createdAt: "방금 전",
-                };
-
-                setLocalReplies((prev) => [newReply, ...prev]);
-                setLocalReplyCount((c) => c + 1);
-                setIsReplyWriting(false);
+              onSubmit={async (content) => {
+                try {
+                  const newReply = await createReply(id, content);
+                  setNewReplyId(newReply.id);
+                  setLocalReplies((prev) => [...prev, newReply]);
+                  setIsReplyWriting(false);
+                } catch (e) {
+                  console.error(e);
+                  alert("답글 작성 실패");
+                }
               }}
             />
           )}
@@ -144,12 +167,13 @@ const CommentItem = ({ comment }) => {
           <ReplyThread replies={localReplies} />
         </S.ReplySection>
       )}
+
       {isReportOpen && (
         <ReportModal
           onClose={handleCloseReport}
           targetType="comment"
           targetId={id}
-          author={author}
+          author={author.nickname}
         />
       )}
     </div>

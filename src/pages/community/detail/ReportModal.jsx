@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import S from "./style";
+import { reportTarget } from "../../../api/community";
 
 const REPORT_OPTIONS = [
-  "욕설/비방",
-  "도배",
-  "홍보/상업성",
-  "성적 콘텐츠",
-  "폭력적/혐오적 콘텐츠",
-  "허위 정보/혼동을 야기하는 콘텐츠",
-  "불법촬영물",
+  { label: "욕설/비방", value: "ABUSE" },
+  { label: "도배", value: "SPAM" },
+  { label: "홍보/상업성", value: "ADVERTISEMENT" },
+  { label: "성적 콘텐츠", value: "SEXUAL" },
+  { label: "폭력적/혐오적 콘텐츠", value: "HATE" },
+  { label: "허위 정보/혼동을 야기하는 콘텐츠", value: "MISINFORMATION" },
+  { label: "불법촬영물", value: "ILLEGAL_CONTENT" },
 ];
 
 const ReportModal = ({ onClose, targetType, targetId, author }) => {
@@ -19,19 +20,19 @@ const ReportModal = ({ onClose, targetType, targetId, author }) => {
     setSelected(option);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!selected) {
       alert("신고 사유를 선택해주세요.");
       return;
     }
 
-    console.log({
-      targetType,
-      targetId,
-      reason: selected,
-    });
+    try {
+      await reportTarget(targetType, targetId, selected);
 
-    setIsSubmitted(true);
+      setIsSubmitted(true);
+    } catch (e) {
+      alert("신고 실패");
+    }
   };
 
   return (
@@ -51,15 +52,15 @@ const ReportModal = ({ onClose, targetType, targetId, author }) => {
               {REPORT_OPTIONS.map((option) => (
                 <S.ReportOption
                   key={option}
-                  onClick={() => handleSelect(option)}
+                  onClick={() => handleSelect(option.value)}
                 >
                   <S.HiddenRadio
                     type="radio"
-                    checked={selected === option}
+                    checked={selected === option.value}
                     readOnly
                   />
-                  <S.CustomCheckbox $checked={selected === option} />
-                  <span>{option}</span>
+                  <S.CustomCheckbox $checked={selected === option.value} />
+                  <span>{option.label}</span>
                 </S.ReportOption>
               ))}
             </S.ReportOptionList>

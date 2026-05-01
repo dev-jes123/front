@@ -8,7 +8,9 @@ const ReplyThread = ({ replies = [] }) => {
   return (
     <S.ReplyThreadContainer>
       {replies.map((reply) => (
-        <ReplyItem key={reply.id} reply={reply} />
+        <div id={`reply-${reply.id}`} key={reply.id}>
+          <ReplyItem reply={reply} />
+        </div>
       ))}
     </S.ReplyThreadContainer>
   );

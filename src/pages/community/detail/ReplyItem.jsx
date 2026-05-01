@@ -1,23 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import S from "./style";
 import ReportModal from "./ReportModal";
+import { formatRelativeTime } from "../../../utils/formatDate";
+import { toggleLikeReply } from "../../../api/community";
 
 const ReplyItem = ({ reply }) => {
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(reply.isLiked || false);
   const [likeCount, setLikeCount] = useState(reply.likeCount || 0);
   const [isReportOpen, setIsReportOpen] = useState(false);
+
   const handleOpenReport = () => setIsReportOpen(true);
   const handleCloseReport = () => setIsReportOpen(false);
 
-  const handleLike = () => {
-    if (isLiked) {
-      setIsLiked(false);
-      setLikeCount((c) => Math.max(0, c - 1));
-    } else {
-      setIsLiked(true);
-      setLikeCount((c) => c + 1);
-    }
-  };
+  useEffect(() => {
+    setLikeCount(reply.likeCount || 0);
+    setIsLiked(reply.isLiked || false);
+  }, [reply]);
+
+const handleLike = async () => {
+  try {
+    const res = await toggleLikeReply(reply.id);
+
+    setIsLiked(res.isLiked);
+    setLikeCount(res.likeCount);
+  } catch (e) {
+    console.error(e);
+    alert("좋아요 실패");
+  }
+};
 
   const likeIcon = isLiked
     ? "/assets/images/icons/like-active.png"
@@ -27,16 +37,24 @@ const ReplyItem = ({ reply }) => {
     <>
       <S.ReplyItem>
         <S.ProfileBox>
-          <S.ProfileImg src={reply.authorProfile} alt="프로필" />
+          <S.ProfileImg
+            src={
+              reply.author.profileImage ||
+              "/assets/images/icons/user-profile.png"
+            }
+            alt={`${reply.author.nickname} 프로필`}
+          />
         </S.ProfileBox>
 
         <S.CommentBubble>
           <S.CommentTop>
-            <S.WritedCommentAuthor>{reply.author}</S.WritedCommentAuthor>
+            <S.WritedCommentAuthor>
+              {reply.author.nickname}
+            </S.WritedCommentAuthor>
 
             <S.CommentRight>
               <S.CommentTime>
-                <span>{reply.createdAt}</span>
+                <span>{formatRelativeTime(reply.createdAt)}</span>
                 <S.CommentSirenIcon
                   src="/assets/images/icons/siren.png"
                   alt="신고"
@@ -57,12 +75,13 @@ const ReplyItem = ({ reply }) => {
           <S.WritedCommentText>{reply.content}</S.WritedCommentText>
         </S.CommentBubble>
       </S.ReplyItem>
+
       {isReportOpen && (
         <ReportModal
           onClose={handleCloseReport}
           targetType="reply"
           targetId={reply.id}
-          author={reply.author}
+          author={reply.author.nickname}
         />
       )}
     </>

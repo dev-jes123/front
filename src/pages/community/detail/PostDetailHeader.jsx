@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { formatDateTime } from "../../../utils/formatDate";
+import { formatRelativeTime } from "../../../utils/formatDate";
 import S from "./style";
 import ReportModal from "./ReportModal";
+import { toggleLikePost, toggleBookmarkPost } from "../../../api/community";
 
 const PostDetailHeader = ({ post }) => {
   const {
@@ -22,29 +23,43 @@ const PostDetailHeader = ({ post }) => {
   const [isReportOpen, setIsReportOpen] = useState(false);
 
   useEffect(() => {
-    setIsLiked(false);
-    setIsBookmarked(false);
+    setIsLiked(post.isLiked);
+    setIsBookmarked(post.isBookmarked);
     setLocalLikeCount(likeCount);
     setLocalBookmarkCount(bookmarkCount);
-  }, [id]);
+  }, [post]);
 
-  const handleToggleLike = () => {
-    if (isLiked) {
-      setIsLiked(false);
-      setLocalLikeCount((c) => Math.max(0, c - 1));
-    } else {
-      setIsLiked(true);
-      setLocalLikeCount((c) => c + 1);
+  const handleToggleLike = async () => {
+    try {
+      await toggleLikePost(post.id);
+
+      if (isLiked) {
+        setIsLiked(false);
+        setLocalLikeCount((c) => Math.max(0, c - 1));
+      } else {
+        setIsLiked(true);
+        setLocalLikeCount((c) => c + 1);
+      }
+    } catch (e) {
+      console.error(e);
+      alert("좋아요 실패");
     }
   };
 
-  const handleToggleBookmark = () => {
-    if (isBookmarked) {
-      setIsBookmarked(false);
-      setLocalBookmarkCount((c) => Math.max(0, c - 1));
-    } else {
-      setIsBookmarked(true);
-      setLocalBookmarkCount((c) => c + 1);
+  const handleToggleBookmark = async () => {
+    try {
+      await toggleBookmarkPost(post.id);
+
+      if (isBookmarked) {
+        setIsBookmarked(false);
+        setLocalBookmarkCount((c) => Math.max(0, c - 1));
+      } else {
+        setIsBookmarked(true);
+        setLocalBookmarkCount((c) => c + 1);
+      }
+    } catch (e) {
+      console.error(e);
+      alert("북마크 실패");
     }
   };
 
@@ -64,8 +79,8 @@ const PostDetailHeader = ({ post }) => {
         <S.PostTitle>
           <S.Title>{title}</S.Title>
           <S.DateAndAuthor>
-            {formatDateTime(createdAt)}
-            <span> | {author}</span>
+            {formatRelativeTime(createdAt)}
+            <span> | {author.nickname}</span>
           </S.DateAndAuthor>
         </S.PostTitle>
 
@@ -106,7 +121,7 @@ const PostDetailHeader = ({ post }) => {
           onClose={handleCloseReport}
           targetType="post"
           targetId={id}
-          author={author}
+          author={author.nickname}
         />
       )}
     </>

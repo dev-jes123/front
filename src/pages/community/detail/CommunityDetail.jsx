@@ -1,46 +1,46 @@
-import React, { useMemo, useState } from 'react';
-import PostDetailHeader from './PostDetailHeader';
-import PostContentCard from './PostContentCard';
-import CommentComposer from './CommentComposer';
-import CommentThread from './CommentThread';
-import BackToListButton from './BackToListButton';
-import S from './style';
-import { mockCommunity } from '../../../mock/mockCommunity';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import PostDetailHeader from "./PostDetailHeader";
+import PostContentCard from "./PostContentCard";
+import CommentComposer from "./CommentComposer";
+import CommentThread from "./CommentThread";
+import BackToListButton from "./BackToListButton";
+import S from "./style";
+import { useParams } from "react-router-dom";
+import { getPostDetail } from "../../../api/community";
 
 const CommunityDetail = () => {
-  const {id} = useParams()
-  const postId = Number(id)
-  const post = useMemo(
-    () => mockCommunity.find((p) => p.id === postId),
-    [postId]
-  )
-  const [comments, setComments] = useState(() => post?.comments ?? [])
-  if(!post){
-    return <div>게시글을 찾을 수 없습니다.</div>
-  }
+  const { id } = useParams();
+  const postId = Number(id);
 
-  const handleAddComment = ({content}) => {
-    const newComment = {
-      id: Date.now(),
-      author: "내 닉네임",
-      authorProfile: "/assets/images/icons/user-profile.png",
-      content,
-      createdAt: "방금 전",
-      likeCount: 0,
-      replyCount: 0,
-      replies: []
-    }
+  const [post, setPost] = useState(null);
 
-    setComments((prev) => [...prev, newComment])
-  }
+  useEffect(() => {
+    const fetchDetail = async () => {
+      try {
+        const data = await getPostDetail(postId);
+        setPost(data);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    fetchDetail();
+  }, [postId]);
+
+  const increaseCommentCount = () => {
+    setPost((prev) => ({
+      ...prev,
+      commentCount: prev.commentCount + 1,
+    }));
+  };
+
+  if (!post) return <div>로딩 중...</div>;
 
   return (
     <S.CommunityDetailContainer>
       <PostDetailHeader post={post} />
       <PostContentCard post={post} />
-      <CommentComposer postId={post.id} onSubmit={handleAddComment} />
-      <CommentThread comments={comments} />
+      <CommentThread postId={post.id} onAddComment={increaseCommentCount} />
       <BackToListButton />
     </S.CommunityDetailContainer>
   );
